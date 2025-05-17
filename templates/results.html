@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraping Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: white;
+        }
+
+        .status-badge.active {
+            background-color: #4CAF50;
+        }
+
+        .status-badge.inactive {
+            background-color: #f44336;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button.secondary {
+            background-color: #6c757d;
+        }
+
+        .results-info {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scraping Results</h1>
+
+        <div class="results-info">
+            {% if results %}
+                <p>Found {{ results|length }} websites for <strong>{{ query }}</strong>. Results saved to <code>results.csv</code>.</p>
+            {% else %}
+                <p>No results found for <strong>{{ query }}</strong>. Please try a different search.</p>
+            {% endif %}
+        </div>
+
+        {% if results %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td><a href="{{ result.domain }}" target="_blank">{{ result.domain }}</a></td>
+                        <td>{{ result.email or 'N/A' }}</td>
+                        <td>
+                            <span class="status-badge {{ result.status|lower }}">
+                                {{ result.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <div class="button-group">
+            <a href="/" class="button">New Search</a>
+            <a href="/download" class="button secondary">Download CSV</a>
+        </div>
+    </div>
+</body>
+</html>

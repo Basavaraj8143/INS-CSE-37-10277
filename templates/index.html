@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Finder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #2b5876, #4e4376);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            color: #fff;
+        }
+               
+        .container {
+            width: 100%;
+            max-width: 1300px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .section-card {
+            flex: 1;
+            min-width: 320px;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+
+        }
+
+        .section-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+
+        form label {
+            display: block;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #f0f0f0;
+        }
+
+        form input[type="text"],
+        form input[type="number"],
+        form input[type="file"],
+        form select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="number"]:focus,
+        form select:focus {
+            background: rgba(255,255,255,0.3);
+        }
+
+        form input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        button,
+        .button {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.4s ease, transform 0.2s ease;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        button:hover,
+        .button:hover {
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            transform: translateY(-2px);
+        }
+
+        .button.secondary {
+            background: linear-gradient(to right, #43cea2, #185a9d);
+        }
+
+        .button-row {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 18px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.4s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #f0f0f0;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 900px) {
+            .container > div {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Finder</h1>
+
+        <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+            <!-- Fetch Websites Section -->
+            <div class="section-card">
+                <h2>Fetch Websites</h2>
+                <form method="POST" id="fetchForm" action="/fetch_websites">
+                    <label>Country:</label>
+                    <select name="country" required>
+                        <option value="United States">United States</option>
+                        <option value="Canada">Canada</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="Australia">Australia</option>
+                        <option value="India">India</option>
+                    </select>
+                    
+                    <label>State/City keyword:</label>
+                    <input type="text" name="state" placeholder="e.g. California, Mumbai">
+                    
+                    <label>Industry keyword:</label>
+                    <input type="text" name="keyword" required placeholder="e.g. furniture, jewelry">
+                    
+                    <label>Number of websites:</label>
+                    <input type="number" name="count" min="1" max="100" value="10" required>
+                    
+                    <button type="submit" id="fetchBtn">Fetch Websites</button>
+                </form>
+                <div class="button-row">
+                    <a href="/download/websites" class="button secondary">Download Websites CSV</a>
+                </div>
+            </div>
+
+            <!-- Filter Websites Section -->
+            <div class="section-card">
+                <h2>Filter Websites</h2>
+                <form method="POST" id="filterForm" enctype="multipart/form-data" action="/filter">
+                    <label>Upload Websites CSV:</label>
+                    <input type="file" name="csv_file" accept=".csv" required>
+                    
+                    <label><input type="checkbox" name="filter_active"> Domain Active</label>
+                    <label><input type="checkbox" name="only_shopify"> Only Shopify websites</label>
+                    <label><input type="checkbox" name="filter_fast"> Loads within 5 secs</label>
+                    
+                    <div style="margin-top: 10px; margin-bottom: 10px;"></div>
+                    
+                    <button type="submit" id="filterBtn">Apply Filters & Download</button>
+                </form>
+            </div>
+
+            <!-- Fetch Email IDs Section -->
+            <div class="section-card">
+                <h2>Fetch Email IDs</h2>
+                <form method="POST" id="emailForm" enctype="multipart/form-data" action="/fetch_emails">
+                    <label>Upload Websites CSV:</label>
+                    <input type="file" name="websites_csv" accept=".csv" required>
+                    
+                    <div class="progress-container" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 0%"></div>
+                        </div>
+                        <p class="progress-text">Processing: 0%</p>
+                    </div>
+                    
+                    <button type="submit" id="emailBtn">Fetch Email IDs</button>
+                </form>
+                <div class="button-row">
+                    <a href="/download/emails" class="button secondary">Download Emails CSV</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = this;
+            const progressContainer = form.querySelector('.progress-container');
+            const progressBar = form.querySelector('.progress');
+            const progressText = form.querySelector('.progress-text');
+            
+            progressContainer.style.display = 'block';
+            form.querySelector('button').disabled = true;
+            
+            const formData = new FormData(form);
+
+            pollProgress();
+
+            fetch('/fetch_emails', {
+                method: 'POST',
+                body: formData
+            });
+
+            function pollProgress() {
+                fetch('/fetch_progress')
+                    .then(response => response.json())
+                    .then(data => {
+                        progressBar.style.width = data.progress + '%';
+                        progressText.textContent = 'Processing: ' + data.progress + '%';
+                        if (data.status === 'completed') {
+                            setTimeout(function() {
+                                window.location.href = '/download/emails';
+                            }, 500);
+                        } else {
+                            setTimeout(pollProgress, 500);
+                        }
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
+
